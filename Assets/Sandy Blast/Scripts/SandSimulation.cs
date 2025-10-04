@@ -12,6 +12,8 @@ public class SandSimulation : MonoBehaviour
     [SerializeField] private int width; // x chạy ngang
     [SerializeField] private int height; // y chạy dọc
     [SerializeField] private Color backgroundColor;
+    [SerializeField] private int pixelsPerUnit = 100;
+
 
     [Header("Data")]
     private Cell[,] grid;
@@ -33,7 +35,7 @@ public class SandSimulation : MonoBehaviour
         UpdateTexture();
 
         renderer = gameObject.AddComponent<SpriteRenderer>();
-        renderer.sprite = Sprite.Create(texture, new Rect(0, 0, width, height), Vector2.one / 2, 100); //new Rect lấy hết ảnh từ (0,0) đến (width,height)
+        renderer.sprite = Sprite.Create(texture, new Rect(0, 0, width, height), Vector2.one / 2, pixelsPerUnit);//new Rect lấy hết ảnh từ (0,0) đến (width,height) độ nhỏ của cát
 
 
     }

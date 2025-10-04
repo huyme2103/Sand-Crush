@@ -6,6 +6,10 @@ public class ShapeManager : MonoBehaviour
 {
     public static ShapeManager instance;
 
+    [Header("Elements")]
+    [SerializeField] private ShapeHolder shapeHolderPrefab;
+    [SerializeField] private Transform slotsParent;
+
     [Header("Data")]
     [SerializeField] private Sprite[] shapeSprites;
     [SerializeField] private Color[] colors;
@@ -23,7 +27,8 @@ public class ShapeManager : MonoBehaviour
     private void Start()
     {
         GenerateShapes();
-        
+        PopulateSlots();
+
     }
 
     private void GenerateShapes()
@@ -34,6 +39,22 @@ public class ShapeManager : MonoBehaviour
         {
             Texture2D tex = ExtractTextureFromSprite(shapeSprites[i]);
             shapes[i] = GenerateShapesFromTexture(tex);
+            shapes[i].tex = tex; //
+        }
+    }
+
+    private void PopulateSlots()
+    {
+        for (int i = 0; i < slotsParent.childCount; i++) // gan spite vao tung o con
+        {
+            ShapeHolder holder = Instantiate(shapeHolderPrefab, slotsParent.GetChild(i).position, Quaternion.identity);
+
+            // set up hình để giữ 
+            Shape shape = shapes.GetRandom();
+            Color color = colors.GetRandom();
+
+            holder.Configure(shape, color);
+
         }
     }
 
@@ -56,7 +77,7 @@ public class ShapeManager : MonoBehaviour
 
     }
 
-    private Shape GenerateShapesFromTexture(Texture2D tex)
+    private Shape GenerateShapesFromTexture(Texture2D tex)  // spite 2d -> shape 
     {
         Shape shape = new Shape(tex.width, tex.height);
 
@@ -64,9 +85,9 @@ public class ShapeManager : MonoBehaviour
         {
             for (int x = 0; x < tex.width; x++)
             {
-                Color pixelColor = tex.GetPixel(x, y);
+                Color pixelColor = tex.GetPixel(x, y); 
 
-                if(pixelColor.a < .1f) //ixel trong suốt => ô trống
+                if(pixelColor.a < .1f) //pixel trong suốt => ô trống
                 {
                     shape.cells[x, y] = Cell.Empty;
                 }
