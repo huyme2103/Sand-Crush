@@ -150,7 +150,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   width: 128
   height: 192
-  backgroundColor: {r: 0, g: 0.2603773, b: 0.041732896, a: 1}
+  backgroundColor: {r: 0, g: 0.2679245, b: 0.045179438, a: 1}
 --- !u!4 &452906719
 Transform:
   m_ObjectHideFlags: 0
@@ -195,6 +195,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4b0ccc1947f9842b36ef8158a80520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  shapeSprites:
+  - {fileID: -136869936, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: -1554566857, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: -79951485, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: -2009548307, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: -316607845, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 1825700896, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 474459788, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 1898224708, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: -1341713546, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 905662481, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: -1872766946, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 779005862, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 589543597, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 1834563573, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 1421197137, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 1183618790, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 1453690577, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  - {fileID: 225446715, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
+  colors:
+  - {r: 1, g: 0, b: 0, a: 1}
+  - {r: 0, g: 0.627451, b: 0.8, a: 1}
+  - {r: 1, g: 0.8901961, b: 0, a: 1}
 --- !u!4 &469346589
 Transform:
   m_ObjectHideFlags: 0

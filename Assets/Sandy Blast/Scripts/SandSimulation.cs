@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 public class SandSimulation : MonoBehaviour
 {
@@ -47,6 +48,8 @@ public class SandSimulation : MonoBehaviour
         SimulateSand();
         UpdateTexture();
     }
+
+    /*
     private void HandleInput()
     {
         if (!Input.GetMouseButton(0))
@@ -59,6 +62,42 @@ public class SandSimulation : MonoBehaviour
         //set grid[position] color
         Color color = Random.ColorHSV(0, 1, .8f, 1f, .8f, 1);
         grid[gridCoords.x, gridCoords.y] = new Cell { type = EMaterialType.Sand, color = color };
+    }
+    */
+
+    private void HandleInput()
+    {
+        if (!Input.GetMouseButtonDown(0))
+            return;
+
+        Vector3 worldClickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+        Vector2Int gridCoords = WorldToGrid(worldClickedPosition);
+
+        Shape randomShape = ShapeManager.instance.Shapes.GetRandom(); // GetRandom code extend
+        Color randomColor = ShapeManager.instance.Colors.GetRandom();
+
+        DropShape(randomShape, randomColor, gridCoords);
+    }
+
+    private void DropShape(Shape shape, Color color, Vector2Int gridCoords)
+    {
+        for (int y = 0; y < shape.height; y++)
+        {
+            for (int x = 0; x < shape.width; x++)
+            {
+                int texX = gridCoords.x - (shape.width / 2) + x;
+                int texY = gridCoords.y - (shape.width / 2) + y;
+
+                if (!IsInBounds(new Vector2Int(texX, texY)) || shape.cells[x, y].type == EMaterialType.Empty)
+                    continue;
+
+
+                Cell cell = shape.cells[x, y];
+                cell.color = color;
+                Debug.Log(color);
+                grid[texX, texY] = cell;
+            }
+        }
     }
 
     private bool IsInBounds(Vector2Int coords)
@@ -82,13 +121,21 @@ public class SandSimulation : MonoBehaviour
 
     private void SimulateSand()
     {
+        // duyệt từ dưới lên
         for (int y = 1; y < height; y++) // khi grid[x, y-1] = grid[x, -1] y sẽ ngoài mảng, height -1 hàng trên cùng
         {
-            for (int x = 0; x < width; x++)
+            bool righSide = Time.frameCount % 2 == 0;
+            if (righSide)// rơi pixel đều 2 bên
             {
-                if (grid[x, y].type != EMaterialType.Sand)
-                    continue;
-                TryMoveSand(x, y);
+                for (int x = width - 1; x >= 0; x--)
+                    if (grid[x, y].type == EMaterialType.Sand)
+                        TryMoveSand(x, y);
+            }
+            else
+            {
+                for (int x = 0; x < width; x++)
+                    if (grid[x, y].type == EMaterialType.Sand)
+                    TryMoveSand(x, y);
             }
         }
     }

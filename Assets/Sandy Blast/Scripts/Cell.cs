@@ -6,6 +6,8 @@ public enum EMaterialType
     Sand = 1,
     Water = 2
 }
+
+[System.Serializable]
 public struct Cell 
 {
     public EMaterialType type;
