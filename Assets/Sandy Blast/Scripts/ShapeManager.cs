@@ -39,7 +39,7 @@ public class ShapeManager : MonoBehaviour
         {
             Texture2D tex = ExtractTextureFromSprite(shapeSprites[i]);
             shapes[i] = GenerateShapesFromTexture(tex);
-            shapes[i].tex = tex; //
+            shapes[i].tex = tex; //lưu textủe gốc vào vào mỗi shapes
         }
     }
 
@@ -47,9 +47,10 @@ public class ShapeManager : MonoBehaviour
     {
         for (int i = 0; i < slotsParent.childCount; i++) // gan spite vao tung o con
         {
-            ShapeHolder holder = Instantiate(shapeHolderPrefab, slotsParent.GetChild(i).position, Quaternion.identity);
+            ShapeHolder holder = Instantiate(shapeHolderPrefab, slotsParent.GetChild(i).position, Quaternion.identity, transform);
 
-            // set up hình để giữ 
+
+            // setup hình để giữ 
             Shape shape = shapes.GetRandom();
             Color color = colors.GetRandom();
 

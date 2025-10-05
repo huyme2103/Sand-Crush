@@ -14,9 +14,14 @@ public class SandSimulation : MonoBehaviour
     [SerializeField] private Color backgroundColor;
     [SerializeField] private int pixelsPerUnit = 100;
 
-
     [Header("Data")]
     private Cell[,] grid;
+
+    private void Awake()
+    {
+        Application.targetFrameRate = 60;
+        
+    }
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -73,7 +78,7 @@ public class SandSimulation : MonoBehaviour
             return;
 
         Vector3 worldClickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2Int gridCoords = WorldToGrid(worldClickedPosition);
+        Vector2Int gridCoords = WorldToGrid(worldClickedPosition); 
 
         Shape randomShape = ShapeManager.instance.Shapes.GetRandom(); // GetRandom code extend
         Color randomColor = ShapeManager.instance.Colors.GetRandom();
@@ -96,7 +101,6 @@ public class SandSimulation : MonoBehaviour
 
                 Cell cell = shape.cells[x, y];
                 cell.color = color;
-                Debug.Log(color);
                 grid[texX, texY] = cell;
             }
         }
