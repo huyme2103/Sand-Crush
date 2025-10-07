@@ -4,8 +4,19 @@ public class ShapeHolder : MonoBehaviour
 {
     [Header(("Elements"))]
     [SerializeField] private SpriteRenderer renderer;
+
+    public Bounds Bounds => renderer.bounds;
+
+    private Shape shape;
+    public Shape Shape => shape;
+
+    private Color color;
+    public Color Color => color;
   public void Configure(Shape shape, Color color)
     {
+        this.shape = shape;
+        this.color = color;
+
         Texture2D tex = shape.tex;
 
         Texture2D newTex = new Texture2D(tex.width, tex.height);
@@ -24,4 +35,9 @@ public class ShapeHolder : MonoBehaviour
 
         renderer.sprite = Sprite.Create(newTex, new Rect(0, 0, newTex.width, newTex.height),Vector2.one/2,100);
     }
+
+    public void Pickup()
+        => renderer.transform.localScale = Vector3.one;
+    public void PutBack()
+        => renderer.transform.localScale = Vector3.one * .8f;
 }

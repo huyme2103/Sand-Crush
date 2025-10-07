@@ -234,6 +234,7 @@ GameObject:
   m_Component:
   - component: {fileID: 469346589}
   - component: {fileID: 469346588}
+  - component: {fileID: 469346590}
   m_Layer: 0
   m_Name: Shape Manager
   m_TagString: Untagged
@@ -253,7 +254,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ca4b0ccc1947f9842b36ef8158a80520, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shapeHolderPrefab: {fileID: 5493521819177532140, guid: 1c59ce662fc424c40b6446cf51bf480b, type: 3}
   slotsParent: {fileID: 1379676499}
   shapeSprites:
   - {fileID: -136869936, guid: 50e02a96aeb89f741b739fccb0996508, type: 3}
@@ -293,6 +293,20 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &469346590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 469346587}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33424f657f7f27a4998385fe445645d1, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shapeHolderPrefab: {fileID: 5493521819177532140, guid: 1c59ce662fc424c40b6446cf51bf480b, type: 3}
+  initialPoolSize: 10
 --- !u!1001 &483799399
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -569,6 +583,7 @@ MonoBehaviour:
     serializedVersion: 2
     m_Bits: 128
   moveSpeed: {x: 1.8, y: 3.2}
+  dropYThreshold: -0.7
 --- !u!4 &2068301960
 Transform:
   m_ObjectHideFlags: 0
@@ -578,7 +593,7 @@ Transform:
   m_GameObject: {fileID: 2068301958}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0.23585375, y: -0.17337541, z: 0.00482879}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

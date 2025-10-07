@@ -7,7 +7,7 @@ public class ShapeManager : MonoBehaviour
     public static ShapeManager instance;
 
     [Header("Elements")]
-    [SerializeField] private ShapeHolder shapeHolderPrefab;
+    //[SerializeField] private ShapeHolder shapeHolderPrefab;
     [SerializeField] private Transform slotsParent;
 
     [Header("Data")]
@@ -16,13 +16,26 @@ public class ShapeManager : MonoBehaviour
     public Color[] Colors => colors;
     private Shape[] shapes;
     public Shape[] Shapes => shapes;
+
+    private int shapeDroppedCounter;
     private void Awake()
     {
         if (instance == null)
             instance = this;
         else
             Destroy(gameObject);
+
+        InputManager.shapeDropped += OnShapeDropped;
+
     }
+
+   
+    private void OnDestroy()
+    {
+        InputManager.shapeDropped -= OnShapeDropped;
+    }
+ 
+
 
     private void Start()
     {
@@ -31,6 +44,15 @@ public class ShapeManager : MonoBehaviour
 
     }
 
+    private void OnShapeDropped(ShapeHolder holder)
+    {
+        shapeDroppedCounter++;
+        if(shapeDroppedCounter >= 3)
+        {
+            shapeDroppedCounter = 0;
+            PopulateSlots(); 
+        }
+    }
     private void GenerateShapes()
     {
         shapes = new Shape[shapeSprites.Length];
@@ -47,8 +69,10 @@ public class ShapeManager : MonoBehaviour
     {
         for (int i = 0; i < slotsParent.childCount; i++) // gan spite vao tung o con
         {
-            ShapeHolder holder = Instantiate(shapeHolderPrefab, slotsParent.GetChild(i).position, Quaternion.identity, transform);
-
+            //ShapeHolder holder = Instantiate(shapeHolderPrefab, slotsParent.GetChild(i).position, Quaternion.identity, transform);
+            ShapeHolder holder = ShapeHolderPool.Instance.Get();
+            holder.transform.position = slotsParent.GetChild(i).position;
+            
 
             // setup hình để giữ 
             Shape shape = shapes.GetRandom();

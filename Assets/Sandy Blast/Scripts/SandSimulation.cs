@@ -1,8 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 
 public class SandSimulation : MonoBehaviour
 {
+    public static SandSimulation instance;
+
+
     [Header("Elements")]
     private SpriteRenderer renderer;
     private Texture2D texture;
@@ -14,14 +18,31 @@ public class SandSimulation : MonoBehaviour
     [SerializeField] private Color backgroundColor;
     [SerializeField] private int pixelsPerUnit = 100;
 
+    public static float maxX;
+    public static float maxY;
+
+    private bool sandMoved;
+    private bool searchedForMatch;
+
     [Header("Data")]
     private Cell[,] grid;
 
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        
+        InputManager.shapeDropped += OnShapeDropped;
+
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
     }
+
+    private void OnDestroy()
+    {
+        InputManager.shapeDropped -= OnShapeDropped;
+    }
+
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -39,39 +60,72 @@ public class SandSimulation : MonoBehaviour
 
         UpdateTexture();
 
+        CalcukateBounds();
+
         renderer = gameObject.AddComponent<SpriteRenderer>();
         renderer.sprite = Sprite.Create(texture, new Rect(0, 0, width, height), Vector2.one / 2, pixelsPerUnit);//new Rect lấy hết ảnh từ (0,0) đến (width,height) độ nhỏ của cát
 
 
     }
 
+   
+
     // Update is called once per frame
     void Update()
     {
         // Sand Fountain
         //grid[width / 2, height / 2] = new Cell { type = EMaterialType.Sand, color = Color.red };
-        HandleInput();
+        //HandleInput();
 
         SimulateSand();
+
+        if (!sandMoved && !searchedForMatch)
+        {
+            TryFindMatch();
+        }
+
         UpdateTexture();
     }
 
-    /*
-    private void HandleInput()
+    private void TryFindMatch()
     {
-        if (!Input.GetMouseButton(0))
-            return;
-        // click position, texture space
-        Vector3 worldClickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2Int gridCoords = WorldToGrid(worldClickedPosition);
-        if (!IsInBounds(gridCoords))
-            return;
-        //set grid[position] color
-        Color color = Random.ColorHSV(0, 1, .8f, 1f, .8f, 1);
-        grid[gridCoords.x, gridCoords.y] = new Cell { type = EMaterialType.Sand, color = color };
-    }
-    */
+        searchedForMatch = true;
 
+        for (int i = 0; i < ShapeManager.instance.Colors.Length; i++)
+        {
+            Color color = ShapeManager.instance.Colors[i];
+
+            if(TexturePathChecker.TryGetConnectedRegion(texture, color, out HashSet<Vector2Int> coords))
+            {
+                foreach(Vector2Int coord in coords)
+                {
+                    grid[coord.x, coord.y].type = EMaterialType.Empty;
+                    grid[coord.x, coord.y].color = backgroundColor;
+                }
+                UpdateTexture();
+                break;
+            }
+        }
+    }
+
+    private void CalcukateBounds()
+    {
+        maxX = (float)width / 200;
+        maxY = (float) height / 200;
+
+    }
+
+
+    private void OnShapeDropped(ShapeHolder shapeHolder)
+    {
+        Vector2Int gridCoords = WorldToGrid(shapeHolder.transform.position);
+
+        DropShape(shapeHolder.Shape, shapeHolder.Color, gridCoords);
+
+        //Destroy(shapeHolder.gameObject);
+        ShapeHolderPool.Instance.ReturnToPool(shapeHolder);
+
+    }
     private void HandleInput()
     {
         if (!Input.GetMouseButtonDown(0))
@@ -127,6 +181,7 @@ public class SandSimulation : MonoBehaviour
 
     private void SimulateSand()
     {
+        sandMoved = false;
         // duyệt từ dưới lên
         for (int y = 1; y < height; y++) // khi grid[x, y-1] = grid[x, -1] y sẽ ngoài mảng, height -1 hàng trên cùng
         {
@@ -205,5 +260,40 @@ public class SandSimulation : MonoBehaviour
         Cell temp = grid[x1, y1];
         grid[x1, y1] = grid[x2, y2];
         grid[x2, y2] = temp;
+
+        sandMoved = true;
+        searchedForMatch = false;
     }
+
+    public bool CanDropShape(ShapeHolder holder)
+    {
+        Shape shape = holder.Shape;
+        Vector2Int gridCoords = WorldToGrid(holder.transform.position);
+
+        for (int y = 0; y < shape.height; y++)
+        {
+            for (int x = 0; x < shape.width; x++)
+            {
+                // Bỏ qua pixel trống
+                if (shape.cells[x, y].type == EMaterialType.Empty)
+                    continue;
+
+                int texX = gridCoords.x - (shape.width / 2) + x;
+                int texY = gridCoords.y - (shape.height / 2) + y;
+
+                // Nếu nằm ngoài lưới
+                if (!IsInBounds(new Vector2Int(texX, texY)))
+                    return false;
+
+                // Nếu trong lưới mà vị trí đó đã có cát
+                if (grid[texX, texY].type != EMaterialType.Empty)
+                    return false;
+            }
+        }
+
+        // có thể thả
+        return true;
+    }
+
+
 }

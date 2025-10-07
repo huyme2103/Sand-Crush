@@ -7,10 +7,16 @@ public class InputManager : MonoBehaviour
     [Header("Setting")]
     [SerializeField] private LayerMask shapeHolderMask;
     [SerializeField] private Vector2 moveSpeed;
+    [SerializeField] private float dropYThreshold;
+
     private ShapeHolder currentShapeHolder;
 
     private Vector3 clickedPosition;
     private Vector3 shapeClickedPosition;
+
+    [Header("Actions")]
+    public static Action<ShapeHolder> shapeDropped;
+
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -37,10 +43,12 @@ public class InputManager : MonoBehaviour
     {
         RaycastHit2D hit = Physics2D.Raycast(Camera.main.ScreenToWorldPoint(Input.mousePosition),
             Vector2.zero, Mathf.Infinity, shapeHolderMask);
-        if (!hit.collider.TryGetComponent(out ShapeHolder shapeHolder))
+        if (hit.collider == null || !hit.collider.TryGetComponent(out ShapeHolder shapeHolder))
             return;
 
         currentShapeHolder = shapeHolder;
+        currentShapeHolder.Pickup();
+
         clickedPosition = Input.mousePosition;
         shapeClickedPosition = currentShapeHolder.transform.position;
     }
@@ -54,16 +62,41 @@ public class InputManager : MonoBehaviour
         delta *= moveSpeed;
         Vector2 targetPosition = (Vector2)shapeClickedPosition + delta;
 
+        Bounds shapeBounds = currentShapeHolder.Bounds;
+        float maxX = SandSimulation.maxX - shapeBounds.extents.x;
+        float maxY = SandSimulation.maxY - shapeBounds.extents.y;
+
+        targetPosition.x = Mathf.Clamp(targetPosition.x, -maxX, maxX);
+        targetPosition.y = Mathf.Clamp(targetPosition.y, targetPosition.y, maxY);
+
         currentShapeHolder.transform.position = Vector3.Lerp(currentShapeHolder.transform.position, targetPosition, Time.deltaTime * 60 * .3f);
     }
 
 
     private void HandleMouseUp()
     {
-       
+       //có thể bỏ shape ?
+       //nếu y thấp quá, đưa về vị trí ban đầu
+       // drop
+
+        if(currentShapeHolder.transform.position.y < dropYThreshold ||
+            !SandSimulation.instance.CanDropShape(currentShapeHolder))
+        {
+            MoveShapeBack();
+        }
+        else
+        {
+            shapeDropped?.Invoke(currentShapeHolder);
+            currentShapeHolder = null;//
+
+        }
     }
 
+    private void MoveShapeBack()
+    {
+        currentShapeHolder.PutBack();
 
-
-
+        LeanTween.move(currentShapeHolder.gameObject, shapeClickedPosition, .1f);
+        currentShapeHolder = null;//
+    }
 }
