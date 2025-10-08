@@ -5,6 +5,7 @@ using UnityEngine;
 public class SandSimulation : MonoBehaviour
 {
     public static SandSimulation instance;
+    public static Action<int> OnLineCleared; // truyền vào số hàng/cột bị xóa
 
 
     [Header("Elements")]
@@ -82,6 +83,7 @@ public class SandSimulation : MonoBehaviour
         if (!sandMoved && !searchedForMatch)
         {
             TryFindMatch();
+
         }
 
         UpdateTexture();
@@ -102,6 +104,8 @@ public class SandSimulation : MonoBehaviour
                     grid[coord.x, coord.y].type = EMaterialType.Empty;
                     grid[coord.x, coord.y].color = backgroundColor;
                 }
+
+                OnLineCleared?.Invoke(coords.Count);//cộng điểm
                 UpdateTexture();
                 break;
             }
