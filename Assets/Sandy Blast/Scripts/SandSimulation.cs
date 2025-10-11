@@ -31,7 +31,7 @@ public class SandSimulation : MonoBehaviour
     private void Awake()
     {
         Application.targetFrameRate = 60;
-        InputManager.shapeDropped += OnShapeDropped;
+        GameEvents.shapeDropped += OnShapeDropped;
 
         if (instance == null)
             instance = this;
@@ -41,7 +41,7 @@ public class SandSimulation : MonoBehaviour
 
     private void OnDestroy()
     {
-        InputManager.shapeDropped -= OnShapeDropped;
+        GameEvents.shapeDropped -= OnShapeDropped;
     }
 
 
@@ -130,19 +130,19 @@ public class SandSimulation : MonoBehaviour
         ShapeHolderPool.Instance.ReturnToPool(shapeHolder);
 
     }
-    private void HandleInput()
-    {
-        if (!Input.GetMouseButtonDown(0))
-            return;
+    //private void HandleInput()
+    //{
+    //    if (!Input.GetMouseButtonDown(0))
+    //        return;
 
-        Vector3 worldClickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-        Vector2Int gridCoords = WorldToGrid(worldClickedPosition); 
+    //    Vector3 worldClickedPosition = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+    //    Vector2Int gridCoords = WorldToGrid(worldClickedPosition); 
 
-        Shape randomShape = ShapeManager.instance.Shapes.GetRandom(); // GetRandom code extend
-        Color randomColor = ShapeManager.instance.Colors.GetRandom();
+    //    Shape randomShape = ShapeManager.instance.Shapes.GetRandom(); // GetRandom code extend
+    //    Color randomColor = ShapeManager.instance.Colors.GetRandom();
 
-        DropShape(randomShape, randomColor, gridCoords);
-    }
+    //    DropShape(randomShape, randomColor, gridCoords);
+    //}
 
     private void DropShape(Shape shape, Color color, Vector2Int gridCoords)
     {

@@ -14,8 +14,8 @@ public class InputManager : MonoBehaviour
     private Vector3 clickedPosition;
     private Vector3 shapeClickedPosition;
 
-    [Header("Actions")]
-    public static Action<ShapeHolder> shapeDropped;
+    //[Header("Actions")]
+    //public static Action<ShapeHolder> shapeDropped;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -86,7 +86,7 @@ public class InputManager : MonoBehaviour
         }
         else
         {
-            shapeDropped?.Invoke(currentShapeHolder);
+            GameEvents.shapeDropped?.Invoke(currentShapeHolder);
             currentShapeHolder = null;//
 
         }

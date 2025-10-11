@@ -8,8 +8,8 @@ public class ScoreManager : MonoBehaviour
     private int currentScore;
     private int comboCount;
     private const string SCORE_KEY = "PlayerScore";
-    public static Action<int> OnScoreChanged;
-    public static Action<int> OnComboChanged;
+    //public static Action<int> OnScoreChanged;
+    //public static Action<int> OnComboChanged;
 
 
     private void Awake()
@@ -29,14 +29,14 @@ public class ScoreManager : MonoBehaviour
 
     private void OnEnable()
     {
-        // Đăng ký lắng nghe event từ InputManager và SandSimulation
-        InputManager.shapeDropped += OnShapeDropped;
+        // Đăng ký lắng nghe event 
+        GameEvents.shapeDropped += OnShapeDropped;
         SandSimulation.OnLineCleared += OnLineCleared;
     }
 
     private void OnDisable()
     {
-        InputManager.shapeDropped -= OnShapeDropped;
+        GameEvents.shapeDropped -= OnShapeDropped;
         SandSimulation.OnLineCleared -= OnLineCleared;
     }
 
@@ -46,7 +46,8 @@ public class ScoreManager : MonoBehaviour
         AddScore(10);
         comboCount = 0; // reset combo khi thả khối mới
 
-        OnComboChanged?.Invoke(comboCount); // reset combo hiển thị
+        //OnComboChanged?.Invoke(comboCount); // reset combo hiển thị
+        GameEvents.OnComboChanged?.Invoke(comboCount);
     }
 
     // +100 điểm mỗi vùng match, thêm bonus theo kích thước và combo
@@ -67,14 +68,14 @@ public class ScoreManager : MonoBehaviour
 
         AddScore(total);
 
-        OnComboChanged?.Invoke(comboCount); //  Báo cho UI combo
+        GameEvents.OnComboChanged?.Invoke(comboCount); //  Báo cho UI combo
     }
 
     private void AddScore(int value)
     {
         currentScore += value;
         Debug.Log($"[SCORE] +{value} | Total = {currentScore}");
-        OnScoreChanged?.Invoke(currentScore); // Báo cho UI cập nhật
+        GameEvents.OnScoreChanged?.Invoke(currentScore); // Báo cho UI cập nhật
         SaveScore();
     }
 

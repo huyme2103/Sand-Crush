@@ -25,14 +25,14 @@ public class ShapeManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        InputManager.shapeDropped += OnShapeDropped;
+        GameEvents.shapeDropped += OnShapeDropped;
 
     }
 
    
     private void OnDestroy()
     {
-        InputManager.shapeDropped -= OnShapeDropped;
+        GameEvents.shapeDropped -= OnShapeDropped;
     }
  
 

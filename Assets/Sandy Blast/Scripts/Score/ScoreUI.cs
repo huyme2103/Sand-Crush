@@ -23,14 +23,14 @@ public class ScoreUI : MonoBehaviour
     private void OnEnable()
     {
         // Đăng ký lắng nghe các event từ ScoreManager
-        ScoreManager.OnScoreChanged += UpdateScoreUI;
-        ScoreManager.OnComboChanged += UpdateComboUI;
+        GameEvents.OnScoreChanged += UpdateScoreUI;
+        GameEvents.OnComboChanged += UpdateComboUI;
     }
 
     private void OnDestroy()
     {
-        ScoreManager.OnScoreChanged -= UpdateScoreUI;
-        ScoreManager.OnComboChanged -= UpdateComboUI;
+        GameEvents.OnScoreChanged -= UpdateScoreUI;
+        GameEvents.OnComboChanged -= UpdateComboUI;
     }
 
     private void UpdateScoreUI(int newScore)
